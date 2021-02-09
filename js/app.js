@@ -24,19 +24,24 @@ const Content_Sections = document.querySelectorAll('section');
  * Start Helper Functions
  * 
 */
-function IsVisible() {
-    VisiSection = Content_Sections[0];
-    minVal = 1000000;
+function IsVisible(sec) {
+    const rect = sec.getBoundingClientRect();
+    return (
+        rect.top >= 0 &&
+        rect.left >= 0 &&
+        rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+        rect.right <= (window.innerWidth || document.documentElement.clientWidth) 
+    );
+}
+
+function VisibleSection() {
+    let VisiSection ;
     for (item of Content_Sections) {
-        let bounding = item.getBoundingClientRect();
-        if (bounding.top > -300 & bounding.top < minVal) {
-            minVal = bounding.top;
+        if (IsVisible(item)) {
             VisiSection = item;
-        };
-    };
+        }
+    }
     return VisiSection;
-
-
 }
 /**
  * End Helper Functions
@@ -65,7 +70,7 @@ function MobileMenu() {
 // Add class 'active' to section when near top of viewport
 function SetSectionsActive() {
     window.addEventListener('scroll', function () {
-        let ActiveSection = IsVisible();
+        let ActiveSection = VisibleSection();
         ActiveSection.classList.add('your-active-class');
         for (let i = 0; i < Content_Sections.length; i++) {
             if (Content_Sections[i].id != ActiveSection.id & Content_Sections[i].classList.contains('your-active-class')) {
